@@ -1,27 +1,25 @@
 package com.validators;
 
-public interface CronValidator {
+import com.parser.CronSpecialChars;
+
+public interface CronValidator extends CronSpecialChars {
 
     public boolean validate();
 
     public default boolean validate(String vals, int min, int max) {
-        //If cron expression contains ',' , means it has multiple values, in this case vaidate all
+        //If cron expression contains ',' , means it has multiple values, in this case vaidate all e.g. 1,2
         for (String val : vals.split(",")) {
-            if ("*".equals(val)) {
+            if (isStarVal.test(val)) {
                 // if single '*' then its valid value and return true; e.g '*'
                 return true;
-            } else if (val.contains("-")) {
+            } else if (isHyphenVal.test(val)) {
                 // If value contains '-' , then its range and validate the range value , e.g 1-31
-                String[] range = val.split("-");
-                int start = Integer.parseInt(range[0]);
-                int end = Integer.parseInt(range[1]);
-                return isValidRange(start, end, min, max);
-            } else if (val.contains("/")) {
+                var range = getRange(val,min, "-");
+                return isValidRange(range[0], range[1], min, max);
+            } else if (isForwardSlashVal.test(val)) {
                 // If value contains '/' then validate if its between range e.g. */12 , 
-                String[] range = val.split("/");
-                int start = range[0].equals("*") ? min : Integer.parseInt(range[0]);
-                int end = Integer.parseInt(range[1]);
-                return isValidRange(start, end, min, max);
+                var range = getRange(val,min, "/");
+                return isValidRange(range[0], range[1], min, max);
             } else {
                 // if its single value, then it must be within range of valida values
                 int singleValue = Integer.parseInt(val);

@@ -1,7 +1,5 @@
 package com.parser;
 
-import com.cron.CronExpression;
-
 public class CronParser {
 
     public static void main(String[] args) {
@@ -9,6 +7,7 @@ public class CronParser {
             CronExpression cronExpression = new CronExpression(args);
             //validate cron expression
             cronExpression.validate();
+            cronExpression.print();
 
         } catch (IllegalArgumentException e) {
             System.err.println("Error: " + e.getMessage());

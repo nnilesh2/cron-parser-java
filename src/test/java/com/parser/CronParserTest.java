@@ -1,10 +1,10 @@
 package com.parser;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
-import com.cron.CronExpression;
 
 public class CronParserTest {
 
@@ -19,11 +19,26 @@ public class CronParserTest {
     }
 
     @Test
+    public void test_cron_print() {
+        var expectedPrintString = """
+                minute        0 15 30 45
+                hour          0
+                day of month  1
+                month         1 2 3 4 5 6 7 8 9 10 11 12
+                day of week   1 2 3 4 5
+                command       /usr/bin/find
+                """;
+        String[] args = {"*/15 0 1,15 * 1-5 /usr/bin/find"};
+        CronExpression cronExpression = new CronExpression(args);
+        var actualPrintString = cronExpression.print();
+        assertEquals(expectedPrintString, actualPrintString);
+    }
+
+    @Test
     public void test_cron_arg_failure() {
 
         String[] args = {};
-        CronExpression cronExpression = new CronExpression(args);
-        var exception = assertThrows(IllegalArgumentException.class, ()-> cronExpression.validate());
+        var exception = assertThrows(IllegalArgumentException.class, ()-> new CronExpression(args));
         assertTrue(exception.getMessage().equals("No cron expression provided"));
     }
 
