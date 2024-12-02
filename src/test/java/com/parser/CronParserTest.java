@@ -20,14 +20,7 @@ public class CronParserTest {
 
     @Test
     public void test_cron_print() {
-        var expectedPrintString = """
-                minute        0 15 30 45
-                hour          0
-                day of month  1 15
-                month         1 2 3 4 5 6 7 8 9 10 11 12
-                day of week   1 2 3 4 5
-                command       /usr/bin/find
-                """;
+        var expectedPrintString = "minute        0 15 30 45\nhour          0\nday of month  1 15\nmonth         1 2 3 4 5 6 7 8 9 10 11 12\nday of week   1 2 3 4 5\ncommand       /usr/bin/find\n";
         String[] args = {"*/15 0 1,15 * 1-5 /usr/bin/find"};
         CronExpression cronExpression = new CronExpression(args);
         var actualPrintString = cronExpression.print();
